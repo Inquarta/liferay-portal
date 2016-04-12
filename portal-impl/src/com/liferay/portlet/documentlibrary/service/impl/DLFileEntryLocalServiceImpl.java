@@ -63,6 +63,7 @@ import com.liferay.portal.model.Lock;
 import com.liferay.portal.model.ModelHintsUtil;
 import com.liferay.portal.model.Repository;
 import com.liferay.portal.model.ResourceConstants;
+import com.liferay.portal.model.Role;
 import com.liferay.portal.model.SystemEventConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.repository.liferayrepository.model.LiferayFileEntry;
@@ -240,6 +241,43 @@ public class DLFileEntryLocalServiceImpl
 			mimeType, title, description, changeLog, StringPool.BLANK,
 			fileEntryTypeId, fieldsMap, DLFileEntryConstants.VERSION_DEFAULT,
 			size, WorkflowConstants.STATUS_DRAFT, serviceContext);
+
+		//YakimKY legacy permissions for file from parent folder
+		Map<Long, String[]> roleIdsToActionIds = new HashMap<Long, String[]>();
+		List<Role> roleList = roleLocalService.getRoles(user.getCompanyId());
+		for (Role role: roleList) {
+			List<String> availableFolderActions = resourcePermissionLocalService.getAvailableResourcePermissionActionIds(
+					user.getCompanyId(), 
+					DLFolder.class.getName(), 
+					ResourceConstants.SCOPE_INDIVIDUAL, 
+					Long.toString(folderId), 
+					role.getRoleId(),
+					com.liferay.portlet.documentlibrary.service.impl.DLFolderLocalServiceImpl.ALL_FOLDER_ACTIONS_ID);
+			if (availableFolderActions.size() > 0) {
+				if (role.getName().equals("Guest"))
+					continue;
+				List<String> availableFileEntryActions = new ArrayList<String>();
+				if (availableFolderActions.contains("VIEW")) 		availableFileEntryActions.add("VIEW");
+				if (availableFolderActions.contains("UPDATE")) 		availableFileEntryActions.add("UPDATE");
+				if (availableFolderActions.contains("PERMISSIONS")) availableFileEntryActions.add("PERMISSIONS");
+				if (availableFolderActions.contains("DELETE")) 		availableFileEntryActions.add("DELETE");
+				if (availableFolderActions.contains("ACCESS")) {
+					availableFileEntryActions.add("ADD_DISCUSSION");
+					availableFileEntryActions.add("DELETE_DISCUSSION");
+					availableFileEntryActions.add("UPDATE_DISCUSSION");
+					availableFileEntryActions.add("OVERRIDE_CHECKOUT");
+				}
+				
+				String[] availableActionsAr = new String[availableFileEntryActions.size()];
+				roleIdsToActionIds.put(role.getRoleId(), availableFileEntryActions.toArray(availableActionsAr));
+			}
+		}
+		resourcePermissionLocalService.setResourcePermissions(
+				user.getCompanyId(),
+				DLFileEntry.class.getName(), 
+				ResourceConstants.SCOPE_INDIVIDUAL,
+				Long.toString(fileEntryId),
+				roleIdsToActionIds);
 
 		// Folder
 

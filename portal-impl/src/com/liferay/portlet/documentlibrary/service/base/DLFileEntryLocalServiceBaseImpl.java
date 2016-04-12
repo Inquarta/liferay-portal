@@ -2052,5 +2052,11 @@ public abstract class DLFileEntryLocalServiceBaseImpl
 	protected TrashEntryPersistence trashEntryPersistence;
 	@BeanReference(type = PersistedModelLocalServiceRegistry.class)
 	protected PersistedModelLocalServiceRegistry persistedModelLocalServiceRegistry;
+	@BeanReference(type = com.liferay.portal.service.RoleLocalService.class)
+	protected com.liferay.portal.service.RoleLocalService roleLocalService;
+	@BeanReference(type = com.liferay.portal.service.ResourcePermissionLocalService.class)
+	protected com.liferay.portal.service.ResourcePermissionLocalService resourcePermissionLocalService;	
+	
+	
 	private String _beanIdentifier;
 }

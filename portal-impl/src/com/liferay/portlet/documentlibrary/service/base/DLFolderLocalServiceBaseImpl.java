@@ -1834,5 +1834,16 @@ public abstract class DLFolderLocalServiceBaseImpl extends BaseLocalServiceImpl
 	protected TrashEntryPersistence trashEntryPersistence;
 	@BeanReference(type = PersistedModelLocalServiceRegistry.class)
 	protected PersistedModelLocalServiceRegistry persistedModelLocalServiceRegistry;
+	@BeanReference(type = com.liferay.portal.service.RoleLocalService.class)
+	protected com.liferay.portal.service.RoleLocalService roleLocalService;
+	@BeanReference(type = com.liferay.portal.service.ResourcePermissionLocalService.class)
+	protected com.liferay.portal.service.ResourcePermissionLocalService resourcePermissionLocalService;	
+/*
+ <bean id=
+ "com.liferay.portal.service.ResourcePermissionLocalService" 
+ class="com.liferay.portal.service.impl.ResourcePermissionLocalServiceImpl" />
+	
+ */
+	
 	private String _beanIdentifier;
 }

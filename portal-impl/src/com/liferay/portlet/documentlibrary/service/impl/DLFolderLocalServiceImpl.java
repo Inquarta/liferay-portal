@@ -44,6 +44,7 @@ import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Lock;
 import com.liferay.portal.model.Repository;
 import com.liferay.portal.model.ResourceConstants;
+import com.liferay.portal.model.Role;
 import com.liferay.portal.model.SystemEventConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.WorkflowDefinitionLink;
@@ -70,6 +71,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -78,6 +80,19 @@ import java.util.Map;
  * @author Alexander Chow
  */
 public class DLFolderLocalServiceImpl extends DLFolderLocalServiceBaseImpl {
+
+	public static final List<String> ALL_FOLDER_ACTIONS_ID = new ArrayList<String>() {
+		private static final long serialVersionUID = 1L;
+	{
+		add("ACCESS");
+		add("ADD_DOCUMENT");
+		add("ADD_SHORTCUT");
+		add("ADD_SUBFOLDER");
+		add("DELETE");
+		add("PERMISSIONS");
+		add("UPDATE");
+		add("VIEW");
+	}};
 
 	@Override
 	public DLFolder addFolder(
@@ -139,6 +154,29 @@ public class DLFolderLocalServiceImpl extends DLFolderLocalServiceBaseImpl {
 				serviceContext.getGuestPermissions());
 		}
 
+		//YakimKY legacy permissions for subfolder
+		Map<Long, String[]> roleIdsToActionIds = new HashMap<Long, String[]>();
+		List<Role> roleList = roleLocalService.getRoles(user.getCompanyId());
+		for (Role role: roleList) {
+			List<String> availableActions = resourcePermissionLocalService.getAvailableResourcePermissionActionIds(
+					user.getCompanyId(), 
+					DLFolder.class.getName(), 
+					ResourceConstants.SCOPE_INDIVIDUAL, 
+					Long.toString(parentFolderId), 
+					role.getRoleId(),
+					ALL_FOLDER_ACTIONS_ID);
+			if (availableActions.size() > 0) {
+				String[] availableActionsAr = new String[availableActions.size()];
+				roleIdsToActionIds.put(role.getRoleId(), availableActions.toArray(availableActionsAr));
+			}
+		}
+		resourcePermissionLocalService.setResourcePermissions(
+				user.getCompanyId(), 
+				DLFolder.class.getName(), 
+				ResourceConstants.SCOPE_INDIVIDUAL, 
+				Long.toString(folderId),
+				roleIdsToActionIds);
+		
 		// Parent folder
 
 		if (parentFolderId != DLFolderConstants.DEFAULT_PARENT_FOLDER_ID) {

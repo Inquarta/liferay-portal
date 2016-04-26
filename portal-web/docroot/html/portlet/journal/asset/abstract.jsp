@@ -67,14 +67,4 @@ else {
 	</div>
 </c:if>
 
-<%
-String summary = HtmlUtil.escape(articleDisplay.getDescription());
 
-summary = HtmlUtil.replaceNewLine(summary);
-
-if (Validator.isNull(summary)) {
-	summary = HtmlUtil.stripHtml(articleDisplay.getContent());
-}
-%>
-
-<%= StringUtil.shorten(summary, abstractLength) %>

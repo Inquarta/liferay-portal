@@ -50,8 +50,14 @@
 		margin-left: 1em;
 	}
 
+	.asset-metadata-new {
+		margin: auto 0;
+		width: 500px;
+	}
+
+
 	.asset-metadata {
-		clear: both;
+		float: right;
 		margin-left: 25px;
 		overflow: hidden;
 
@@ -65,12 +71,13 @@
 	}
 
 	.asset-more {
-		clear: left;
+		clear: right;
+		float: right;
 	}
 
 	.asset-small-image {
-		float: right;
-		padding-left: 0.5em;
+		float: left;
+		padding-right: 1.0em;
 		width: 150px;
 	}
 
@@ -83,7 +90,7 @@
 	}
 
 	.asset-title {
-		border-bottom: 1px solid #DDD;
+		clear: both;
 		margin-right: 8px;
 		padding-bottom: 1px;
 
@@ -140,13 +147,18 @@
 
 	.metadata-entry {
 		color: #999;
+		float: right;
+	}
+
+	.txt-style {
+		clear: right;
 	}
 
 	.metadata-modified-date, .metadata-create-date, .metadata-publish-date, .metadata-expiration-date {
 		background: url(@theme_image_path@/common/date.png) no-repeat 0 0;
 		color: #999;
-		margin-bottom: 1em;
-		padding-left: 25px;
+		margin-bottom: 0.5em;
+		padding-left: 25px; 
 	}
 
 	.metadata-priority {

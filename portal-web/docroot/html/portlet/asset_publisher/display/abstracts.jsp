@@ -73,7 +73,7 @@ String summary = StringUtil.shorten(assetRenderer.getSummary(locale), abstractLe
 					</c:otherwise>
 				</c:choose>
 
-				<h3 style="margin-bottom: 0; line-height: 28px;" >
+				<h3 align="justify" style="margin-bottom: 0; line-height: 28px;" >
 					<c:choose>
 						<c:when test="<%= Validator.isNotNull(viewURL) %>">
 							<a style="color: red; text-decoration: underline;" href="<%= viewURL %>"> <%= HtmlUtil.escape(title) %></a>
@@ -86,9 +86,14 @@ String summary = StringUtil.shorten(assetRenderer.getSummary(locale), abstractLe
 
 				<div class="asset-metadata-new">
 					<%
-					request.setAttribute("asset_metadata.jspf-filterByMetadata", true);
+						String value = null;
+						for (int j = 0; j < metadataFields.length; j++) {
+							if (metadataFields[j].equals("create-date")) {
+								value = dateFormatDate.format(assetEntry.getCreateDate());
+							}
+						}
 					%>
-					<%@ include file="/html/portlet/asset_publisher/asset_metadata.jspf" %>
+					<%= value %>
 				</div>
 
 				<%
@@ -107,9 +112,6 @@ String summary = StringUtil.shorten(assetRenderer.getSummary(locale), abstractLe
 					else {
 						articleDisplay = JournalArticleLocalServiceUtil.getArticleDisplay(article, null, null, languageId, 1, null, themeDisplay);
 					}
-				%>
-	
-				<%
 					summary = HtmlUtil.escape(articleDisplay.getDescription());
 					
 					summary = HtmlUtil.replaceNewLine(summary);
@@ -119,7 +121,7 @@ String summary = StringUtil.shorten(assetRenderer.getSummary(locale), abstractLe
 					}
 				%>
 
-				<div class="txt-style" >
+				<div align="justify" class="txt-style" >
 					<%= StringUtil.shorten(summary, abstractLength) %>
 				</div>
 
@@ -127,7 +129,7 @@ String summary = StringUtil.shorten(assetRenderer.getSummary(locale), abstractLe
 
 			<c:if test="<%= Validator.isNotNull(viewURL) %>">
 				<div class="asset-more">
-					<a href="<%= viewURL %>">Подробнее &raquo; </a>
+					<a style="text-decoration: underline;" href="<%= viewURL %>">Подробнее</a>
 				</div>
 			</c:if>
 		</div>

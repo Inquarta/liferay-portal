@@ -51,8 +51,7 @@
 	}
 
 	.asset-metadata-new {
-		margin: auto 0;
-		width: 500px;
+		float: right;
 	}
 
 

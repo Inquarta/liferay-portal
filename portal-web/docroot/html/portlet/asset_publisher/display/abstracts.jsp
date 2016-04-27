@@ -44,6 +44,9 @@ String viewURL = AssetPublisherHelperImpl.getAssetViewURL(liferayPortletRequest,
 String viewURLMessage = viewInContext ? assetRenderer.getViewInContextMessage() : "read-more-x-about-x";
 
 String summary = StringUtil.shorten(assetRenderer.getSummary(locale), abstractLength);
+
+Portlet portlet = (Portlet)request.getAttribute(WebKeys.RENDER_PORTLET);
+String customViewURL = viewURL + "#p_p_id_"+portlet.getPortletId()+"_";
 %>
 
 <c:if test="<%= show %>">
@@ -64,6 +67,7 @@ String summary = StringUtil.shorten(assetRenderer.getSummary(locale), abstractLe
 				request.setAttribute(WebKeys.ASSET_PUBLISHER_VIEW_URL, viewURL);
 				%>
 
+
 				<c:choose>
 					<c:when test="<%= path == null %>">
 						<%= HtmlUtil.escape(summary) %>
@@ -75,8 +79,8 @@ String summary = StringUtil.shorten(assetRenderer.getSummary(locale), abstractLe
 
 				<h3 align="justify" style="margin-bottom: 0; line-height: 28px;" >
 					<c:choose>
-						<c:when test="<%= Validator.isNotNull(viewURL) %>">
-							<a style="color: red; text-decoration: underline;" href="<%= viewURL %>"> <%= HtmlUtil.escape(title) %></a>
+						<c:when test="<%= Validator.isNotNull(customViewURL) %>">
+							<a style="color: red; text-decoration: underline;" href="<%= customViewURL %>"> <%= HtmlUtil.escape(title) %></a>
 						</c:when>
 						<c:otherwise>
 							<img alt="" src="<%= assetRenderer.getIconPath(renderRequest) %>" /> <%= HtmlUtil.escape(title) %>
@@ -127,9 +131,9 @@ String summary = StringUtil.shorten(assetRenderer.getSummary(locale), abstractLe
 
 			</div>
 
-			<c:if test="<%= Validator.isNotNull(viewURL) %>">
+			<c:if test="<%= Validator.isNotNull(customViewURL) %>">
 				<div class="asset-more">
-					<a style="text-decoration: underline;" href="<%= viewURL %>">Подробнее</a>
+					<a style="text-decoration: underline;" href="<%= customViewURL %>">Подробнее</a>
 				</div>
 			</c:if>
 		</div>

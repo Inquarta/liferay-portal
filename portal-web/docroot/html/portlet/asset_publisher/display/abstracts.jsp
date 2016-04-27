@@ -90,12 +90,7 @@ String customViewURL = viewURL + "#p_p_id_"+portlet.getPortletId()+"_";
 
 				<div class="asset-metadata-new">
 					<%
-						String value = null;
-						for (int j = 0; j < metadataFields.length; j++) {
-							if (metadataFields[j].equals("create-date")) {
-								value = dateFormatDate.format(assetEntry.getCreateDate());
-							}
-						}
+						String value = dateFormatDate.format(assetEntry.getModifiedDate());
 					%>
 					<%= value %>
 				</div>

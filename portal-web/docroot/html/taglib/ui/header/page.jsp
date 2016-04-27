@@ -26,12 +26,14 @@ if (Validator.isNotNull(backURL) && !backURL.equals("javascript:history.go(-1);"
 }
 
 String headerTitle = (localizeTitle) ? LanguageUtil.get(pageContext, title) : title;
+
+String customBackURL = backURL + "#p_p_id" + namespace;
 %>
 
 <div class="taglib-header <%= cssClass %>">
-	<c:if test="<%= showBackURL && Validator.isNotNull(backURL) %>">
+	<c:if test="<%= showBackURL && Validator.isNotNull(customBackURL) %>">
 		<span class="header-back-to">
-			<a class="icon-circle-arrow-left previous-level" href="<%= backURL %>" id="<%= namespace %>TabsBack" title="<%= HtmlUtil.escapeAttribute(backLabel) %>">
+			<a class="icon-circle-arrow-left previous-level" href="<%= customBackURL %>" id="<%= namespace %>TabsBack" title="<%= HtmlUtil.escapeAttribute(backLabel) %>">
 				<span class="helper-hidden-accessible">
 					<c:choose>
 						<c:when test="<%= escapeXml %>">
